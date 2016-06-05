@@ -1,0 +1,399 @@
+body {
+    height: 100vh;
+}
+
+
+img {
+    width: 100%;
+    height: 100%;
+}
+
+/* Elements requiring a reset for positioning */
+.navbar, .row, .col-xs-3, .col-xs-6{
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+/* Navigation bar labels */
+nav .label-container {
+    position: relative;
+    top: 15px;
+    right: 5px;
+}
+
+nav .label {
+    position: relative;
+    float: right;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+nav img {
+    position: relative;
+    bottom: 5px;
+    margin-right: 10px;
+    float: left;
+    height: 30px;
+    width: 30px;
+}
+
+/* Position of the JoyStick zone.*/
+.joystick_zone {
+    display: block;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    right: 0;
+    bottom: 0;
+}
+
+.control_zone {
+    position: relative;
+    width: calc(100% - 250px);
+    display: flex;
+    flex: 1;
+}
+
+.control_sliders {
+    position: absolute;
+    height: auto;
+    width: 100%;
+    bottom: 0;
+}
+
+/* Flex body container, so the page allocates the remaining viewpoint automatically*/
+.body_container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #999999;
+    overflow: hidden;
+}
+
+/* slider styling */
+#control_area input[type=range] {
+    width: 200px;
+    height: 55px;
+   	top:250px;
+}
+
+.settings-modal input[type=range] {
+    width: 100px;
+    height: 15px;
+	top: 150px;
+}
+
+input[type=range] {	
+	position: absolute;
+	z-index: 0;
+	display: block;
+    -webkit-appearance: none;
+    background-color: #848484;
+
+    -webkit-transform:rotate(90deg);
+    -webkit-transform-origin: 0 0;
+    -moz-transform:rotate(90deg);
+    -moz-transform-origin: 0 0;
+    -o-transform:rotate(90deg);
+    -o-transform-origin: 0 0;
+    -ms-transform:rotate(90deg);
+    -ms-transform-origin: 0 0;
+
+    transform:rotate(-90deg);
+    transform-origin: 0 0;
+
+    border-radius: 8px;
+}
+
+#control_area input[type="range"]::-webkit-slider-thumb {
+    width: 35px;
+    height: 55px;
+}
+
+.settings-modal input[type="range"]::-webkit-slider-thumb {
+    width: 15px;
+    height: 15px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background-color: #585858;
+	border-radius: 8px;
+}
+
+input[type="range"]::-ms-tooltip {
+	visibility: hidden;
+}
+
+.settings-modal .slider {
+	width: 10px;
+    height: 50px;
+}
+
+.settings-modal .settings_sense {
+    height: 200px;
+    position: relative;
+}
+
+#control_area .slider {
+    width: 55px;
+    height: 290px;
+    margin-left: 20px;
+    float:left;
+    position: relative;
+}
+
+input[type=range]:focus {
+	outline: none;
+}
+
+.slider button {
+    height: 40px;
+    top: 0;
+    position: relative;
+    border-radius: 8px;
+}
+
+.slider span {
+    height: 20px;
+    width: 100%;
+    position: absolute;
+    bottom: 10px;
+    text-align: center;
+}
+
+.btn:focus {
+	outline: none;
+}
+
+/* modals */
+.modal img {
+    width: 100%;
+}
+
+#preset_create_div .bootstrap-tagsinput {
+	position: absolute;
+	left: 10px;
+	font-size: 17px;
+}
+
+#preset_edit_div .bootstrap-tagsinput {
+	position: absolute;
+	left: 10px;
+	font-size: 17px;
+}
+
+.tt-menu {
+	text-align: left;
+	max-height: 200px;  
+	overflow-y: auto;
+}
+
+/* Top block consisting of the camera views, and the editing camera view.*/
+#top_area {
+	height: 28vw;
+	overflow: hidden;
+}
+
+/* Flex area to make the body area scale to the remaining viewpoint. */
+#body_area {
+    display: flex;
+    flex: 1;
+}
+
+#left_area {
+    overflow: hidden;
+    display: flex;
+    flex: 1;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.control_buttons {
+    padding-left: 20px;
+    padding-top: 7px;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    background-color: #666666;
+}
+
+#control_area, .control_wrapper, #right_area .row {
+    width: 100%;
+    display: flex;
+    flex: 1;
+}
+
+/* Overflow in right area is hidden because of the joystick */
+#right_area {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Camera block carousel */
+#current_camera, #carousel, #camera_area, #camera_area .carousel-inner, #camera_area .carousel-inner, #camera_area img, #camera_area .col-xs-6, #camera_area .row, #camera_area .item {
+	border: 0;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+}
+
+.camera_title {
+    top: 10px;
+    left: 10px;
+    position: absolute;
+}
+
+#camera_area .camera_title span, #current_camera .camera_title span  {
+    height: 20px;
+    color: white;
+    opacity: 0.5;
+    font-size: 20px;
+
+    margin-left: 5px;
+
+    letter-spacing: 0;
+    text-shadow: 0 0 4px #000000;
+}
+
+/* Position the camera icon */
+.camera_title .glyphicon {
+    top: 3px;
+    margin-left: 10px;
+    height: 20px;
+}
+
+#camera_area .row {
+    height: 50%;
+}
+
+#preset_area img {
+    height: 80px;
+}
+
+/* Preset area configuration. */
+#tagsearch {
+    position: relative;
+    margin: 0;
+    padding: 0;
+	width: 100%;
+    -webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	background-color: white;
+}
+#tagsearch .twitter-typeahead {
+	width: 100%;
+}
+
+#tagsearch i {
+    position: absolute;
+    color: #999999;
+    padding: 15px;
+    z-index: 5;
+    font-size: 18px;
+}
+
+#tagsearch input {
+    height: 50px;
+    width: 100%;
+    background-color: #666666 !important;
+    color: #999999;
+    border: none;
+    padding-left: 50px;
+    border-radius: 0;
+}
+
+#preset_area {
+    background-color: #1A1A1A;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: scroll;
+}
+
+#preset_area h5 {
+    width: 100%;
+    height: 20px;
+    padding: 2px;
+    margin: 0;
+    text-align: center;
+}
+
+/* Colors below the preset images */
+#preset_area .available {
+    background-color: #5cb85c;
+}
+
+#preset_area .selected {
+    background-color: #f0ad4e;
+}
+
+#preset_area .unavailable {
+    background-color: #d9534f;
+}
+
+#preset_area .none {
+    background-color: #666666;
+}
+
+.camera_status.unavailable {
+    background-color: #d9534f;
+}
+
+.camera_status.selected {
+    background-color: #f0ad4e;
+}
+
+.camera_status.available {
+    background-color: #5cb85c;
+}
+
+.camera_status {
+    bottom: 0px;
+    left: 0px;
+    height: 7px;
+    width: 100%;
+    background-color: #666666;
+    position: absolute;
+}
+
+#preset_create_div img {
+    width: 100%;
+    position: relative;
+}
+
+.modal-body {
+    position: relative;
+    height: 300px;
+}
+.preset-overlay {
+    position: relative;
+	cursor: pointer;
+}
+
+.preset-overlay::before {
+	font-family: "Glyphicons Halflings";
+	content:"\270f";
+	display: block;
+	font-size: 3em;
+    color: #333333;
+    text-align: center;
+	position: absolute;
+    padding-top: 8px;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 20px;
+    background: rgba(78,78,78, 0.6);
+}
+
+.fill-tags {
+    height: 280px;
+    overflow: auto;
+}
