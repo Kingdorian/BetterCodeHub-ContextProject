@@ -1,9 +1,9 @@
 package com.benine.backend.database;
 
 import com.benine.backend.Config;
-import com.benine.backend.LogEvent;
 import com.benine.backend.Logger;
 import com.benine.backend.ServerController;
+import com.benine.backend.performance.PresetQueueController;
 import com.benine.backend.preset.Preset;
 import com.benine.backend.preset.PresetController;
 
@@ -25,10 +25,9 @@ public class DatabaseController {
   
   /**
    * Constructor for a database controller.
-   * @param serverController to interact with the rest of the system
    */
-  public DatabaseController(ServerController serverController) {
-    this.serverController = serverController;
+  public DatabaseController() {
+    this.serverController = ServerController.getInstance();
     this.config = serverController.getConfig();
     this.logger = serverController.getLogger();
     database = loadDatabase();
@@ -58,6 +57,7 @@ public class DatabaseController {
     }
     database.checkCameras(serverController.getCameraController().getCameras());
     loadPresets();
+    loadPresetQueues();
   }
   
   /**
@@ -65,8 +65,8 @@ public class DatabaseController {
    */
   public void stop() {
     database.closeConnection();
-  } 
-  
+  }
+
   /**
    * Loads the presets from the database.
    */
@@ -78,8 +78,16 @@ public class DatabaseController {
         preset.addTags(database.getTagsFromPreset(preset));
       }
     } catch (SQLException e) {
-      logger.log("Cannot read presets from database", LogEvent.Type.CRITICAL);
+      logger.log("Cannot read presets from database", e);
     }
+  }
+
+  /**
+   * Loads the presetQueues from the database.
+   */
+  private void loadPresetQueues() {
+    PresetQueueController presetQueueController = serverController.getPresetQueueController();
+    presetQueueController.addPresetQueues(database.getQueues());
   }
 
   /**

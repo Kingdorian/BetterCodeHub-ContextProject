@@ -6,10 +6,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-
+import com.benine.backend.camera.CameraBusyException;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -42,7 +40,7 @@ public class IpcameraIrisTest {
   }
   
   @Test
-  public final void testSetAutoIrisOff() throws CameraConnectionException {
+  public final void testSetAutoIrisOff() throws CameraConnectionException, CameraBusyException {
     setCameraBehaviour("D30", "d30");
 
     camera.setAutoIrisOn(false);
@@ -51,7 +49,7 @@ public class IpcameraIrisTest {
   }
   
   @Test
-  public final void testSetAutoIrisOn() throws CameraConnectionException {
+  public final void testSetAutoIrisOn() throws CameraConnectionException, CameraBusyException {
     setCameraBehaviour("D31", "d31");
 
     camera.setAutoIrisOn(true);
@@ -60,7 +58,7 @@ public class IpcameraIrisTest {
   }
   
   @Test
-  public final void testIsAutoIrisOff() throws CameraConnectionException {
+  public final void testIsAutoIrisOff() throws CameraConnectionException, CameraBusyException {
     setCameraBehaviour("D3", "d30");
     boolean res = camera.isAutoIrisOn();
     
@@ -69,7 +67,7 @@ public class IpcameraIrisTest {
   }
   
   @Test
-  public final void testIsAutoIrisOn() throws CameraConnectionException {
+  public final void testIsAutoIrisOn() throws CameraConnectionException, CameraBusyException {
     setCameraBehaviour("D3", "d31");
 
     boolean res = camera.isAutoIrisOn();
@@ -79,13 +77,13 @@ public class IpcameraIrisTest {
   }
   
   @Test(expected = IpcameraConnectionException.class)
-  public final void testIsAutoIrisOnException() throws CameraConnectionException {
+  public final void testIsAutoIrisOnException() throws CameraConnectionException, CameraBusyException {
     setCameraBehaviour("D3", "p31");
     camera.isAutoIrisOn();
   }
   
   @Test
-  public final void testSetIrisPosition() throws CameraConnectionException {
+  public final void testSetIrisPosition() throws CameraConnectionException, CameraBusyException {
     setCameraBehaviour("AXI5A5", "axi5A5");
 
     camera.setIrisPosition(80);
@@ -94,7 +92,7 @@ public class IpcameraIrisTest {
   }
   
   @Test
-  public final void testSetIrisPosition2() throws CameraConnectionException {
+  public final void testSetIrisPosition2() throws CameraConnectionException, CameraBusyException {
     setCameraBehaviour("AXI557", "axi557");
 
     camera.setIrisPosition(2);
@@ -103,7 +101,7 @@ public class IpcameraIrisTest {
   }
   
   @Test
-  public final void testGetIrisPosition() throws CameraConnectionException {
+  public final void testGetIrisPosition() throws CameraConnectionException, CameraBusyException {
     setCameraBehaviour("GI", "giD421");
     int res = camera.getIrisPosition();
     
@@ -113,7 +111,7 @@ public class IpcameraIrisTest {
   }
 
   @Test
-  public final void testMoveIris() throws CameraConnectionException {
+  public final void testMoveIris() throws CameraConnectionException, CameraBusyException {
     setCameraBehaviour("AXIC34", "axiC34");
     setCameraBehaviour("GI", "giD421");
     camera.moveIris(40);

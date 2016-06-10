@@ -33,9 +33,9 @@ public class CameraController {
   
   /**
    * Constructor of the camera controller which creates a camera factory producer.
-   * @param serverController this cameraController belongs to.
    */
-  public CameraController(ServerController serverController) {
+  public CameraController() {
+    ServerController serverController = ServerController.getInstance();
     config = serverController.getConfig();
     logger = serverController.getLogger();
     streamController = serverController.getStreamController();
@@ -127,7 +127,7 @@ public class CameraController {
   private JSONObject getCameraJSON(Camera camera) {
     try {
       return camera.toJSON();
-    } catch (CameraConnectionException e) {
+    } catch (CameraConnectionException | CameraBusyException e ) {
       getLogger().log("Failed to get the JSON representation of camera: " 
           + camera.getId(), LogEvent.Type.CRITICAL);
       JSONObject json = new JSONObject();

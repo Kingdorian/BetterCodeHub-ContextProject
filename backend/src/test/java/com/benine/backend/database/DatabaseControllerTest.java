@@ -1,5 +1,6 @@
 package com.benine.backend.database;
 
+import com.benine.backend.performance.PresetQueue;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,37 +8,28 @@ import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.doThrow;
 
-import java.sql.SQLException;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.benine.backend.Config;
-import com.benine.backend.LogEvent;
-import com.benine.backend.ServerController;
-import com.benine.backend.camera.CameraController;
 import com.benine.backend.preset.Preset;
-import com.benine.backend.preset.PresetController;
 import com.benine.backend.Logger;
+import com.benine.backend.ServerController;
 
 public class DatabaseControllerTest {
   
   DatabaseController databaseController;
-  ServerController serverController = mock(ServerController.class);
-  PresetController presetController = mock(PresetController.class);
-  CameraController cameraController = mock(CameraController.class);
   Logger logger = mock(Logger.class);
   Database database = mock(Database.class);
   
   @Before
-  public void setup() {
-
+  public void setup() {    
+    ServerController.setConfigPath("resources" + File.separator + "configs" + File.separator + "maintest.conf");
+    ServerController.getInstance();
     when(database.getAllPresets()).thenReturn(new ArrayList<>());
-    when(serverController.getConfig()).thenReturn(mock(Config.class));
-    when(serverController.getLogger()).thenReturn(logger);
-    when(serverController.getPresetController()).thenReturn(presetController);
-    when(serverController.getCameraController()).thenReturn(cameraController);
-    databaseController = new DatabaseController(serverController);
+    databaseController = new DatabaseController();
     databaseController.setDatabase(database);
   }
   
@@ -64,23 +56,26 @@ public class DatabaseControllerTest {
   @Test
   public void testLoadPresets() {
     when(database.checkDatabase()).thenReturn(false);
+
     ArrayList<Preset> presets = new ArrayList<>();
-    ArrayList<String> tags = new ArrayList<>();
+    Set<String> tags = new HashSet<>();
     tags.add("test");
     Preset preset = mock(Preset.class);
     presets.add(preset);
-    when(database.getTagsFromPreset(preset)).thenReturn(tags);
-    when(presetController.getPresets()).thenReturn(presets);
+    when(database.getAllPresets()).thenReturn(presets);
     databaseController.start();
-    verify(preset).addTags(tags);
+    Assert.assertTrue(ServerController.getInstance().getPresetController().getPresets().contains(preset));
   }
-  
+
   @Test
-  public void testLoadPresetsException() throws SQLException {
+  public void testLoadPresetQueues() {
     when(database.checkDatabase()).thenReturn(false);
-    doThrow(new SQLException()).when(presetController).addPresets(new ArrayList<Preset>());
+    ArrayList<PresetQueue> queueList = new ArrayList<>();
+    PresetQueue queue = mock(PresetQueue.class);
+    queueList.add(queue);
+    when(database.getQueues()).thenReturn(queueList);
     databaseController.start();
-    verify(logger).log("Cannot read presets from database", LogEvent.Type.CRITICAL);
+    Assert.assertTrue(ServerController.getInstance().getPresetQueueController().getPresetQueues().contains(queue));
   }
   
   @Test
