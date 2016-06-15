@@ -69,16 +69,15 @@ public class IPCameraPreset extends Preset {
     json.put("tilt", position.getTilt());
     json.put("zoom", position.getZoom());
     json.put("focus", focus.getFocus());
-    json.put("autofocus", focus.isAutofocus());
     json.put("iris", iris.getIris());
-    json.put("autoiris", iris.isAutoiris());
+    json.put("autofocus", focus.isAutofocus());
     json.put("panspeed", panspeed);
     json.put("tiltspeed", tiltspeed);
-    json.put("id", presetid);
-    json.put("cameraid", cameraId);
-    json.put("image", image);
-    json.put("name", name);
-
+    json.put("autoiris", iris.isAutoiris());
+    json.put("id", getId());
+    json.put("cameraid", getCameraId());
+    json.put("image", getImage());
+    json.put("name", getName());
     JSONArray tagsJSON = new JSONArray();
     for (String tag : tags) {
       tagsJSON.add(tag);
@@ -200,9 +199,9 @@ public class IPCameraPreset extends Preset {
     if (tiltspeed != other.tiltspeed) {
       return false;
     }
-    if (tags == null && other.tags != null) {
+    if (tags == null && other.getTags() != null) {
       return false;
-    } else if (tags != null && !tags.equals(other.tags)) {
+    } else if (tags != null && !tags.equals(other.getTags())) {
       return false;
     }
     return true;

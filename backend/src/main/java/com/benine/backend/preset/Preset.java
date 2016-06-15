@@ -26,12 +26,12 @@ import javax.imageio.ImageIO;
  * an abstract preset class containing the basics for a preset.
  */
 public abstract class Preset {
-
-  String image;
-  int presetid = -1;
-  Set<String> tags = new HashSet<String>();
-  int cameraId;
-  String name = "";
+  
+  private String image;
+  private int presetid = -1;
+  protected Set<String> tags = new HashSet<String>();
+  private int cameraId;
+  private String name = "";
 
   /**
    * Constructs a preset.
@@ -112,7 +112,7 @@ public abstract class Preset {
    * Remove all the tags from this preset.
    */
   public void removeTags() {
-    this.tags.clear();
+    this.tags.removeAll(getTags());
   }
 
   /**
@@ -123,9 +123,9 @@ public abstract class Preset {
   public JSONObject toJSON() {
     JSONObject json = new JSONObject();
 
-    json.put("id", presetid);
-    json.put("cameraid", cameraId);
-    json.put("image", image);
+    json.put("id", getId());
+    json.put("cameraid", getCameraId());
+    json.put("image", getImage());
     JSONArray tagsJSON = new JSONArray();
     for (String tag : tags) {
       tagsJSON.add(tag);
@@ -161,7 +161,7 @@ public abstract class Preset {
     }
     Preset preset = (Preset) o;
     if (presetid != preset.presetid || cameraId != preset.cameraId
-        || !tags.equals(preset.tags) || !name.equals(preset.name)) {
+        || !tags.equals(preset.getTags()) || !name.equals(preset.name)) {
       return false;
     }
     return true;
@@ -190,7 +190,7 @@ public abstract class Preset {
     ImageIO.write(bufferedImage, "jpg", path);
 
     PresetController presetController = ServerController.getInstance().getPresetController();
-    image = path.getName();
+    setImage(path.getName());
     presetController.updatePreset(this);
   }
   

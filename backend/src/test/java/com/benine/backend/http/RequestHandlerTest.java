@@ -9,7 +9,6 @@ import com.benine.backend.performance.PresetQueueController;
 import com.benine.backend.video.StreamController;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.util.MultiMap;
-import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,8 +32,8 @@ public abstract class RequestHandlerTest {
   protected PrintWriter out;
   protected String target;
   protected Request requestMock;
-  protected CameraController cameraController = mock(CameraController.class);
-  protected StreamController streamController = mock(StreamController.class);
+  CameraController cameraController = mock(CameraController.class);
+  StreamController streamController = mock(StreamController.class);
   protected PresetController presetController = mock(PresetController.class);
   protected PresetQueueController presetQueueController = mock(PresetQueueController.class);
   protected HttpServletResponse httpresponseMock;
@@ -45,7 +44,7 @@ public abstract class RequestHandlerTest {
   public abstract RequestHandler supplyHandler();
 
   @Before
-  public void initialize() throws IOException, JSONException, CameraBusyException {
+  public void initialize() throws IOException,CameraBusyException {
     when(httpserver.getLogger()).thenReturn(logger);
     when(config.getValue("stream_compression")).thenReturn("true");
     when(httpserver.getConfig()).thenReturn(config);
@@ -111,27 +110,27 @@ public abstract class RequestHandlerTest {
 
   @Test
   public void testResponseMessageTrueStatus() throws Exception {
-    handler.respond(requestMock, httpresponseMock, true);
+    handler.respondSuccess(requestMock, httpresponseMock);
     verify(httpresponseMock).setStatus(200);
   }
   
   @Test
   public void testResponseMessageFalseStatus() throws Exception {
-    handler.respond(requestMock, httpresponseMock, false);
+    handler.respondFailure(requestMock, httpresponseMock);
     verify(httpresponseMock).setStatus(200);
   }
 
   @Test
   public void testResponseMessageTrueMessage() throws Exception {
     String response = "{\"succes\":\"true\"}";
-    handler.respond(requestMock, httpresponseMock, true);
+    handler.respondSuccess(requestMock, httpresponseMock);
     verify(out).write(response);
   }
 
   @Test
   public void testResponseMessageFalseMessage() throws Exception {
     String response = "{\"succes\":\"false\"}";
-    handler.respond(requestMock, httpresponseMock, false);
+    handler.respondFailure(requestMock, httpresponseMock);
     verify(out).write(response);
   }
 }
