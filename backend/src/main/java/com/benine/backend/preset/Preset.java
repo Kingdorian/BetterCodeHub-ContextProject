@@ -26,22 +26,20 @@ import javax.imageio.ImageIO;
  * an abstract preset class containing the basics for a preset.
  */
 public abstract class Preset {
-  
-  private String image;
-  private int presetid = -1;
-  protected Set<String> tags = new HashSet<String>();
-  private int cameraId;
-  private String name;
+
+  String image;
+  int presetid = -1;
+  Set<String> tags = new HashSet<String>();
+  int cameraId;
+  String name = "";
 
   /**
    * Constructs a preset.
    *
    * @param cameraId The id of the camera associated with this preset.
-   * @param name     The name of te preset
    */
-  public Preset(int cameraId, String name) {
+  public Preset(int cameraId) {
     this.cameraId = cameraId;
-    this.name = name;
   }
 
   public String getImage() {
