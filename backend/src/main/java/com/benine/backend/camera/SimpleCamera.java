@@ -55,9 +55,7 @@ public class SimpleCamera extends BasicCamera implements PresetCamera {
   @Override
   public Preset createPreset(Set<String> tagList, String name) throws CameraConnectionException {
     int cameraId = getId();
-    SimplePreset preset = new SimplePreset(cameraId, tagList);
-    preset.setName(name);
-    return preset;
+    return new SimplePreset(cameraId, tagList, name);
   }
   
   @Override

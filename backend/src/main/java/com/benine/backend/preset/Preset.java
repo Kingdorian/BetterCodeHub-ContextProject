@@ -31,15 +31,17 @@ public abstract class Preset {
   private int presetid = -1;
   protected Set<String> tags = new HashSet<String>();
   private int cameraId;
-  private String name = "";
+  private String name;
 
   /**
    * Constructs a preset.
    *
    * @param cameraId The id of the camera associated with this preset.
+   * @param name     The name of te preset
    */
-  public Preset(int cameraId) {
+  public Preset(int cameraId, String name) {
     this.cameraId = cameraId;
+    this.name = name;
   }
 
   public String getImage() {
@@ -112,7 +114,7 @@ public abstract class Preset {
    * Remove all the tags from this preset.
    */
   public void removeTags() {
-    this.tags.removeAll(getTags());
+    this.tags.clear();
   }
 
   /**
@@ -123,9 +125,9 @@ public abstract class Preset {
   public JSONObject toJSON() {
     JSONObject json = new JSONObject();
 
-    json.put("id", getId());
-    json.put("cameraid", getCameraId());
-    json.put("image", getImage());
+    json.put("id", presetid);
+    json.put("cameraid", cameraId);
+    json.put("image", image);
     JSONArray tagsJSON = new JSONArray();
     for (String tag : tags) {
       tagsJSON.add(tag);
@@ -161,7 +163,7 @@ public abstract class Preset {
     }
     Preset preset = (Preset) o;
     if (presetid != preset.presetid || cameraId != preset.cameraId
-        || !tags.equals(preset.getTags()) || !name.equals(preset.name)) {
+        || !tags.equals(preset.tags) || !name.equals(preset.name)) {
       return false;
     }
     return true;
@@ -190,7 +192,7 @@ public abstract class Preset {
     ImageIO.write(bufferedImage, "jpg", path);
 
     PresetController presetController = ServerController.getInstance().getPresetController();
-    setImage(path.getName());
+    image = path.getName();
     presetController.updatePreset(this);
   }
   
