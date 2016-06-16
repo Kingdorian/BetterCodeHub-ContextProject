@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import java.util.Collection;
 
-import static org.mockito.Matchers.matches;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -29,7 +28,7 @@ public class AutoCreationSubViewsHandlerTest extends AutoPresetHandlerTest {
     setParameters(parameters);
     getHandler().handle(target, requestMock, httprequestMock, httpresponseMock);
 
-    verify(out).write(matches("\\{\"SubViews\":\\[\\{\"bottomRight\":\\{\"x\":\\d*.\\d*,\"y\":\\d*.\\d*\\},\"topLeft\":\\{\"x\":\\d*.\\d*,\"y\":\\d*.\\d*\\}\\}\\]\\}"));
+    verify(out).write("{\"SubViews\":[" +  new SubView(0, 100, 100, 0).toJSON().toJSONString()+"]}");
     verify(requestMock).setHandled(true);
   }
 

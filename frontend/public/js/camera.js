@@ -1,14 +1,13 @@
 /**
 * Camera object containing all information the client knows about a camera.
-* @param newCam json object from backend to create a camera object.
 */
-function Camera(newCam) {
-	this.id = newCam.id;
-	this.inuse = newCam.inuse;
-	this.autoFocus = newCam.autoFocus;
-	this.autoIris = newCam.autoIris;
-	this.zoom = newCam.zoom;
-	this.move = newCam.move;
+function Camera(id, inuse, autoFocus, autoIris, zoom, move) {
+	this.id = id;
+	this.inuse = inuse;
+	this.autoFocus = autoFocus;
+	this.autoIris = autoIris;
+	this.zoom = zoom;
+	this.move = move;
 	this.img = $('<img src="/api/backend/camera/' + this.id + '/mjpeg" data-src="holder.js/246x144?auto=yes&text=Camera ' + this.id + ' unavailable&bg=8b8b8b">');
 }
 Camera.prototype = {
@@ -74,13 +73,13 @@ Camera.prototype = {
 			iris.hide();
 		} else {
 			iris.show();
-			iris.find("#auto_iris").prop('checked', this.autoIris);
+			setButton(iris.find("#auto_iris"), this.autoIris);
 		}
 		if (this.autoFocus === undefined) {
 			focus.hide();
 		} else {
 			focus.show();
-			focus.find("#auto_focus").prop('checked', this.autoFocus);
+			setButton(focus.find("#auto_focus"), this.autofocus);
 		}
 	}
 };

@@ -43,7 +43,6 @@ function clearCookies() {
  * Resets the default values.
  */
 function defaults() {
-	console.log("default");
 	clearCookies();
 	loadSettings();
 }

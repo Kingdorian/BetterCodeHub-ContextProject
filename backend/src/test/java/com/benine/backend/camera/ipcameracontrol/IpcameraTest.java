@@ -5,8 +5,6 @@ import com.benine.backend.Logger;
 import com.benine.backend.ServerController;
 import com.benine.backend.camera.*;
 import com.benine.backend.preset.IPCameraPreset;
-import com.benine.backend.video.StreamType;
-
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.junit.Assert;
@@ -24,8 +22,9 @@ import static org.mockito.Mockito.*;
 
 /**
  * Test class to test the IP Camera class.
+ * The mock server is used to simulate the camera.
  */
-public class IpcameraTest extends BasicCameraTest {
+public class IpcameraTest {
 
   private IPCamera camera, busyCamera;
   private CameraController cameraController = mock(CameraController.class);
@@ -136,6 +135,19 @@ public class IpcameraTest extends BasicCameraTest {
     IPCamera camera = new IPCamera("1.300.3.4", cameraController);
     camera.move(180, 50);
   }
+
+  @Test
+  public final void testGetSetId() {
+    IPCamera camera = new IPCamera("1.300.3.4", cameraController);
+    camera.setId(4);
+    Assert.assertEquals(4, camera.getId());
+  }
+
+  @Test
+  public final void testUninitializedId(){
+    IPCamera camera = new IPCamera("1.300.3.4", cameraController);
+    Assert.assertEquals(-1, camera.getId());
+  }
   
   @Test
   public final void testNotEqualsIPAddress() {
@@ -213,14 +225,22 @@ public class IpcameraTest extends BasicCameraTest {
     setCameraBehaviour("D1", "d11");
     setCameraBehaviour("D3", "d31");
     setCameraBehaviour("GI", "giD421");
-    IPCameraPreset expected = new IPCameraPreset(new ZoomPosition(0, 180, 256), new FocusValue(1261, true), new IrisValue(2029, true), -1);
-    expected.setName("name");
+    IPCameraPreset expected = new IPCameraPreset(new ZoomPosition(0, 180, 256), 1261, 2029, true, true, -1, "name");
+    
     assertEquals(expected, camera.createPreset(new HashSet<>(), "name"));
   }
   
   @Test
   public final void testGetIPAddress() {
     assertEquals("test", camera.getIpaddress());
+  }
+
+  @Test
+  public void testIsSetInUse() {
+    IPCamera camera1 = new IPCamera("ip", cameraController);
+    Assert.assertFalse(camera1.isInUse());
+    camera1.setInUse();
+    Assert.assertTrue(camera1.isInUse());
   }
 
   @Test
@@ -284,27 +304,6 @@ public class IpcameraTest extends BasicCameraTest {
   @Test (expected = CameraBusyException.class)
   public void testBusyZoomTo() throws CameraBusyException, CameraConnectionException {
     busyCamera.zoomTo(30);
-  }
-  
-  @Test
-  public void testGetStreamType() {
-    assertEquals(StreamType.MJPEG, camera.getStreamType());
-  }
-
-  @Override
-  public BasicCamera getCamera() {
-    return new IPCamera("test", mock(CameraController.class));
-  }
-
-  @Test
-  public void testGetSetAspectRatio() {
-    camera.setAspectRatio(1.2);
-    Assert.assertEquals(1.2, camera.getAspectRatio(), 0.05);
-  }
-
-  @Test
-  public void testDefaultAspectRatio() {
-    Assert.assertEquals(16.0/9, camera.getAspectRatio(), 0.05);
   }
 
 }

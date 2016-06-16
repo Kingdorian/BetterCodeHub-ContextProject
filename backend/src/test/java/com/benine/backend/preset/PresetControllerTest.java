@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created on 18-5-16.
@@ -37,14 +39,11 @@ public class PresetControllerTest {
     preset = mock(Preset.class);
     preset2 = mock(Preset.class);
     when(preset.getId()).thenReturn(1);
-    when(preset.getName()).thenReturn("");
-    when(preset2.getName()).thenReturn("");
   }
   
   @Test
   public void testPresetJSON() throws SQLException {
     Preset preset = mock(Preset.class);
-    when(preset.getName()).thenReturn("");
     JSONObject jsonObject = new JSONObject();
     jsonObject.put("image", "test");
     when(preset.toJSON()).thenReturn(jsonObject);
@@ -67,19 +66,6 @@ public class PresetControllerTest {
     expectedPresets.add(preset);
     presetController.addPreset(preset);
     Assert.assertEquals(expectedPresets, presetController.getPresets());
-  }
-  
-  @Test
-  public void testAddPresetWithoutName() throws Exception {   
-    presetController.addPreset(preset);
-    verify(preset).setName("Preset 1");
-  }
-  
-  @Test
-  public void testAddPresetWithName() throws Exception {   
-    when(preset.getName()).thenReturn("Preset name");
-    presetController.addPreset(preset);
-    verify(preset, never()).setName("Preset 1");
   }
   
   @Test
@@ -210,7 +196,6 @@ public class PresetControllerTest {
   @Test
   public void testAddPresetNonExistentTags() throws SQLException {
     Preset preset = mock(Preset.class);
-    when(preset.getName()).thenReturn("");
     HashSet<String> tags = new HashSet<>();
     tags.add("tag1");
     when(preset.getTags()).thenReturn((Set)tags);
@@ -245,7 +230,6 @@ public class PresetControllerTest {
   public void testRemoveTagFromPreset() throws SQLException {
     PresetController controller = new PresetController();
     Preset preset1 = mock(Preset.class);
-    when(preset1.getName()).thenReturn("");
     controller.addPreset(preset1);
     HashSet<String> tags = new HashSet<>();
     tags.add("tag1");

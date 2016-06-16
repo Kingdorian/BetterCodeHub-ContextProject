@@ -6,8 +6,6 @@ import com.benine.backend.ServerController;
 import com.benine.backend.camera.Camera;
 import com.benine.backend.camera.CameraConnectionException;
 import com.benine.backend.camera.ZoomPosition;
-import com.benine.backend.camera.ipcameracontrol.FocusValue;
-import com.benine.backend.camera.ipcameracontrol.IrisValue;
 import com.benine.backend.performance.PresetQueue;
 import com.benine.backend.preset.IPCameraPreset;
 import com.benine.backend.preset.Preset;
@@ -272,11 +270,11 @@ public class MySQLDatabase implements Database {
    */
   private void setIpPreset(IPCameraPreset preset, PreparedStatement statement) {
     int auto = 0;
-    if (preset.getFocus().isAutofocus()) {
+    if (preset.isAutofocus()) {
       auto = 1;
     }
     int autoir = 0;
-    if (preset.getIris().isAutoiris()) {
+    if (preset.isAutoiris()) {
       autoir = 1;
     }
     try {
@@ -284,8 +282,8 @@ public class MySQLDatabase implements Database {
       statement.setDouble(2, preset.getPosition().getPan());
       statement.setDouble(3, preset.getPosition().getTilt());
       statement.setDouble(4, preset.getPosition().getZoom());
-      statement.setDouble(5, preset.getFocus().getFocus());
-      statement.setDouble(6, preset.getIris().getIris());
+      statement.setDouble(5, preset.getFocus());
+      statement.setDouble(6, preset.getIris());
       statement.setInt(7, auto);
       statement.setDouble(8, preset.getPanspeed());
       statement.setDouble(9, preset.getTiltspeed());
@@ -625,17 +623,17 @@ public class MySQLDatabase implements Database {
     try {
       ZoomPosition pos = new ZoomPosition(resultset.getInt("pan"),
               resultset.getInt("tilt"), resultset.getInt("zoom"));
-      FocusValue focus = new FocusValue(resultset.getInt("focus"),
-                                    resultset.getInt("autofocus") == 1);
-      IrisValue iris = new IrisValue(resultset.getInt("iris"),
-                                      resultset.getInt("autoiris") == 1);
+      int focus = resultset.getInt("focus");
+      int iris = resultset.getInt("iris");
+      boolean autoFocus = resultset.getInt("autofocus") == 1;
       int panspeed = resultset.getInt("panspeed");
       int tiltspeed = resultset.getInt("tiltspeed");
+      boolean autoIris = resultset.getInt("autoiris") == 1;
       int cameraId = resultset.getInt("camera_ID");
       int id = resultset.getInt("ID");
       String name = resultset.getString("name");
-      IPCameraPreset preset = new IPCameraPreset(pos, focus, iris, cameraId);
-      preset.setName(name);
+      IPCameraPreset preset = new IPCameraPreset(pos, focus, iris,
+              autoFocus, autoIris, cameraId, name);
       preset.setId(id);
       preset.setPanspeed(panspeed);
       preset.setTiltspeed(tiltspeed);
@@ -658,8 +656,7 @@ public class MySQLDatabase implements Database {
       String image = resultset.getString("image");
       int cameraId = resultset.getInt("camera_ID");
       String name = resultset.getString("name");
-      SimplePreset preset = new SimplePreset(cameraId);
-      preset.setName(name);
+      SimplePreset preset = new SimplePreset(cameraId, name);
       int id = resultset.getInt("id");
       preset.setId(id);
       preset.setImage(image);

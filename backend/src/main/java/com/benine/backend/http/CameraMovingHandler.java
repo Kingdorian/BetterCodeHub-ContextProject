@@ -28,9 +28,14 @@ public class CameraMovingHandler extends CameraRequestHandler {
     int camID = getCameraId(request);
 
     MovingCamera movingCam = (MovingCamera) getCameraController().getCameraById(camID);
+    String moveType = request.getParameter("moveType");
+    String pan = request.getParameter("pan");
+    String tilt = request.getParameter("tilt");
+    String panSpeed = request.getParameter("panSpeed");
+    String tiltSpeed = request.getParameter("tiltSpeed");
 
     try {
-      move(movingCam, request);
+      move(movingCam, moveType, pan, tilt, panSpeed, tiltSpeed);
       respondSuccess(request, res);
     } catch (MalformedURIException e) {
       getLogger().log("Malformed URI: " + request.getRequestURI(), LogEvent.Type.WARNING);
@@ -51,19 +56,19 @@ public class CameraMovingHandler extends CameraRequestHandler {
   /**
    * Moves the camera.
    * @param movingCam     a MovingCamera object.
-   * @param request to move the camera.
+   * @param moveType      The type of movement.
+   * @param pan           The pan value.
+   * @param tilt          The tilt value.
+   * @param panSpeed      The panspeed value.
+   * @param tiltSpeed     The tiltspeed value.
    * @throws MalformedURIException      If the url contains the wrong parameters.
    * @throws CameraConnectionException  If the camera cannot be reached.
    * @throws CameraBusyException        If the camera is busy.
    */
-  public void move(MovingCamera movingCam, Request request)
+  public void move(MovingCamera movingCam, String moveType, String pan, String tilt,
+                   String panSpeed, String tiltSpeed)
           throws MalformedURIException, CameraConnectionException, CameraBusyException {
-    
-    String moveType = request.getParameter("moveType");
-    String pan = request.getParameter("pan");
-    String tilt = request.getParameter("tilt");
-    String panSpeed = request.getParameter("panSpeed");
-    String tiltSpeed = request.getParameter("tiltSpeed");
+
     if (pan == null || tilt == null || panSpeed == null || tiltSpeed == null) {
       throw new MalformedURIException("Invalid value for moveX or moveY");
     }

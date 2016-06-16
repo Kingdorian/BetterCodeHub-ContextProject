@@ -4,6 +4,7 @@ import com.benine.backend.camera.CameraBusyException;
 import com.benine.backend.camera.CameraConnectionException;
 import com.benine.backend.camera.IrisCamera;
 import org.eclipse.jetty.util.MultiMap;
+import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +26,7 @@ public class CameraIrisHandlerTest extends CameraRequestHandlerTest {
   }
 
   @Before
-  public void initialize() throws IOException, CameraBusyException {
+  public void initialize() throws IOException, JSONException, CameraBusyException {
     super.initialize();
     when(cameraController.getCameraById(42)).thenReturn(cam);
   }
