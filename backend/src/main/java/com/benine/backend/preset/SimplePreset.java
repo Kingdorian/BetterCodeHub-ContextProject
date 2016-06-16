@@ -16,20 +16,18 @@ public class SimplePreset extends Preset {
   /**
    * Create a simple preset
    * @param cameraId of the camera this preset belongs to.
-   * @param name The name of the preset
    */
-  public SimplePreset(int cameraId, String name) {
-    super(cameraId, name);
+  public SimplePreset(int cameraId) {
+    super(cameraId);
   }
   
   /**
    * Create a simple preset
    * @param cameraId of the camera this preset belongs to.
    * @param tags of this preset
-   * @param name The name of the preset
    */
-  public SimplePreset(int cameraId, Set<String> tags, String name) {
-    this(cameraId, name);
+  public SimplePreset(int cameraId, Set<String> tags) {
+    this(cameraId);
     super.addTags(tags);
   }
 
@@ -37,9 +35,9 @@ public class SimplePreset extends Preset {
   public JSONObject toJSON() {
     JSONObject json = new JSONObject();
     json.put("image", getImage());
-    json.put("id", getId());
-    json.put("cameraid", getCameraId());
-    json.put("name", getName());
+    json.put("id", presetid);
+    json.put("cameraid", cameraId);
+    json.put("name", name);
     JSONArray tagsJSON = new JSONArray();
     for (String tag : tags) {
       tagsJSON.add(tag);
@@ -50,7 +48,5 @@ public class SimplePreset extends Preset {
   }
 
   @Override
-  public void excecutePreset(Camera camera) throws CameraConnectionException {
-    
-  }
+  public void excecutePreset(Camera camera) throws CameraConnectionException {}
 }
