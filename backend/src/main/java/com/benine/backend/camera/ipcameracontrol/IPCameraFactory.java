@@ -42,12 +42,7 @@ public class IPCameraFactory implements CameraFactory {
       throw new InvalidCameraTypeException("Type of camera is not right specified");
     }
     logger.log("Create IP camera object", LogEvent.Type.INFO);
-    IPCamera cam = createIpcamera(address);
-    String aspectRatioString = config.getValue("camera_" + index + "_aspectratio");
-    if (aspectRatioString != null) {
-      cam.setAspectRatio(Double.parseDouble(aspectRatioString));
-    }
-    return cam;
+    return createIpcamera(address);
   }
   
   /**

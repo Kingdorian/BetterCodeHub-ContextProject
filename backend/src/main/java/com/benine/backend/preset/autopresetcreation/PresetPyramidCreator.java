@@ -18,6 +18,7 @@ public class PresetPyramidCreator extends AutoPresetCreator {
   private int levels;
   private double overlap;
 
+
   /**
    * Constructs a PresetPyramidCreator.
    * @param rows the amount of rows > 0
@@ -39,7 +40,7 @@ public class PresetPyramidCreator extends AutoPresetCreator {
   }
 
   @Override
-  protected Collection<ZoomPosition> generatePositions(IPCamera cam, Collection<SubView> subViews)
+  protected ArrayList<ZoomPosition> generatePositions(IPCamera cam, Collection<SubView> subViews)
           throws CameraConnectionException {
     ArrayList<ZoomPosition> positions = new ArrayList<>();
 
@@ -63,6 +64,15 @@ public class PresetPyramidCreator extends AutoPresetCreator {
     return positions;
   }
 
+  @Override
+  public int getTotalAmountPresets() {
+    int total = 0;
+    for (int i = 0; i < levels; i++) {
+      total += (int) Math.pow(rows * columns, i);
+    }
+    return total;
+  }
+
   /**
    * Creates a collection of subviews with the specified amount of rows columns and levels.
    * @return A collection of subviews.
@@ -72,8 +82,22 @@ public class PresetPyramidCreator extends AutoPresetCreator {
   // or else this will throw an concurrentModificationException
   public Collection<SubView> generateSubViews() {
     ArrayList<SubView> subViews = new ArrayList<>();
+
+    double cameraAspectRatio = IPCamera.VERTICAL_FOV_MAX / IPCamera.HORIZONTAL_FOV_MAX ;
     // Level 1
-    subViews.add(new SubView(0, 100, 100, 0));
+    double height = 100;
+    double width = 100;
+    if (1 < cameraAspectRatio) {
+      // If subview is wider then camera view resize width
+      width = height / cameraAspectRatio;
+    } else {
+      // If subview is higher then camera view then resize height
+      height = width * cameraAspectRatio;
+    }
+
+    Coordinate topLeft = new Coordinate(50 - (0.5 * width), 50 + (0.5 * height));
+    Coordinate bottomRight = new Coordinate(50 + (0.5 * width), 50 - (0.5 * height));
+    subViews.add(new SubView(topLeft, bottomRight));
 
     ArrayList<SubView> lastLayer = new ArrayList<>(subViews);
     // Other levels
@@ -139,13 +163,14 @@ public class PresetPyramidCreator extends AutoPresetCreator {
                 + ((0.5 + (double)column) * subViewWidth );
         double subViewCenterY = subView.getTopLeft().getY() - ((0.5 + (double)row) * subViewHeight);
 
-        double subViewAspectRatio = (subViewHeight) / (subViewWidth);
-        if (subViewAspectRatio < 1) {
+        double subViewAspectRatio = subViewHeight / subViewWidth;
+        double cameraAspectRatio = IPCamera.VERTICAL_FOV_MAX / IPCamera.HORIZONTAL_FOV_MAX ;
+        if (subViewAspectRatio < cameraAspectRatio) {
           // If subview is wider then camera view resize width
-          subViewWidth = subViewHeight;
+          subViewWidth = subViewHeight / cameraAspectRatio;
         } else {
           // If subview is higher then camera view then resize height
-          subViewHeight = subViewWidth;
+          subViewHeight = subViewWidth * cameraAspectRatio;
         }
         Coordinate topLeft = new Coordinate(subViewCenterX - (0.5 * subViewWidth),
                 subViewCenterY + (0.5 * subViewHeight));
